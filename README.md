@@ -11,7 +11,8 @@ support english and french client only
 
 ![image](https://github.com/user-attachments/assets/02be3815-b635-45e5-9bfd-ce9704ed10dc)
 
-![image](https://github.com/user-attachments/assets/67d0656a-18af-4d27-b9d2-14ca1cf402dc)
+![image](https://github.com/user-attachments/assets/ca75f73e-8277-4098-931d-bcdf1a2ffd6b)
+
 
 Todo :
 Add Priest pet (Shadowfiend)
