@@ -4,14 +4,12 @@ local numChildren = -1
 local Table = {
    ["Nameplates"] = {},
    ["Snakes"] = {
-      "Viper",
-      "Venomous Snake",
-	  -- frFR
-	  "Vipère",
-	  "Serpent venimeux",
+      
    },
    ["Totems"] = {
 		-- enUS
+		["Viper"] = true,
+		["Venomous Snake"] = true,
 		["Mana Spring Totem VIII"] = true,
 		["Cleansing Totem"] = true,
 		["Disease Cleansing Totem"] = true,
@@ -289,10 +287,12 @@ local Table = {
 							 
      
 		-- autres spells	  
-      ["Spirit Wolf"] = true,
-	  ["Esprit du loup"] = true,
-      ["Treant"] = true,
-	  ["Tréant"] = true,
+		["Vipère"] = true,
+		["Serpent venimeux"] = true,
+		["Spirit Wolf"] = true,
+		["Esprit du loup"] = true,
+		["Treant"] = true,
+		["Tréant"] = true,
    },
    xOfs = 0,
    yOfs = 0,
