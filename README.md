@@ -1,7 +1,11 @@
 # TotemPlatesOnyxiaTBC
 Modified version which hide totem nameplate to show icons, it also remove nameplate from minions like Treant.
+
 It modify the nameplates of Venomous Snake from hunter's trap
+
 Modified also the icons to be HD and thin
+
+support english and french client only
 
 ![image](https://github.com/user-attachments/assets/ac2ce55e-3640-404e-9941-542246cd6c3b)
 
