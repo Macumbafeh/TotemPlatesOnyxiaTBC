@@ -1,7 +1,12 @@
 # TotemPlatesOnyxiaTBC
 Modified version which hide totem nameplate to show icons, it also remove nameplate from minions like Treant.
 
-It modify the nameplates of Venomous Snake from hunter's trap
+It also modify the nameplates of 
+- Venomous Snake/Viper from hunter's trap
+- Treant from druid
+- Water Elemental from mage
+- Shadowfiend from priest
+- Gargoyle from DK
 
 Modified also the icons to be HD and thin
 
@@ -12,12 +17,6 @@ support english and french client only
 ![image](https://github.com/user-attachments/assets/02be3815-b635-45e5-9bfd-ce9704ed10dc)
 
 ![image](https://github.com/user-attachments/assets/ca75f73e-8277-4098-931d-bcdf1a2ffd6b)
-
-
-Todo :
-Add Priest pet (Shadowfiend)
-DK gargoyle
-Water elem from mage
 
 
 # Source :
