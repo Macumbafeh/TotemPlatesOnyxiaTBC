@@ -10,8 +10,6 @@ local Table = {
    },
    ["Totems"] = {
 		-- enUS
-		["Viper"] = true,
-		["Venomous Snake"] = true,
 		["Mana Spring Totem VIII"] = true,
 		["Cleansing Totem"] = true,
 		["Disease Cleansing Totem"] = true,
@@ -75,8 +73,7 @@ local Table = {
 		["Mana Spring Totem III"] = true,
 		["Mana Spring Totem IV"] = true,
 		["Mana Spring Totem V"] = true,
-		["Mana Tide Totem"] = true,
-					 
+		["Mana Tide Totem"] = true,		 
 		["Nature Resistance Totem"] = true,
 		["Nature Resistance Totem II"] = true,
 		["Nature Resistance Totem III"] = true,
@@ -224,7 +221,7 @@ local Table = {
 		["Totem de r\195\169sistance \195\160 la Nature V"] = true,
 		["Totem de r\195\169sistance \195\160 la Nature VI"] = true,
 		
-		["Totem de r\195\169sistance \195\169l\195\169mentaire"] = true, -- totem de résistance au feu warmane...
+		["Totem de r\195\169sistance \195\169l\195\169mentaire"] = true, -- totem de résistance au feu rang 1 warmane...
 		["Totem de r\195\169sistance au Feu"] = true,
 		["Totem de r\195\169sistance au Feu II"] = true,
 		["Totem de r\195\169sistance au Feu III"] = true,
@@ -288,27 +285,22 @@ local Table = {
 		["Totem Nova de feu VII"] = true,
 							 
      
-		-- autres spells	  
-		["Vipère"] = true,
-		["Serpent venimeux"] = true,
+		-- other spells
+			-- enUS
+		["Viper"] = true,
+		["Venomous Snake"] = true,
 		["Spirit Wolf"] = true,
-		["Esprit du loup"] = true,
 		["Treant"] = true,
-		["Tréant"] = true,
 		["Shadowfiend"] = true,
-		["Ombrefiel"] = true,
-		["El\195\169mentaire d'eau"] = true,
-		["El\195\169mentaire d'eau "] = true,
-		["Elémentaire d’eau"] = true,
-		["Elémentaire d’eau "] = true,
-		
-		["El\195\169mentaire d\039eau"] = true,
-		["El\195\169mentaire d\039eau "] = true,
-		["Elémentaire d\039eau"] = true,
-		["Elémentaire d\039eau "] = true,
-		
 		["Water Elemental"] = true,
 		["Ebon Gargoyle"] = true,
+			-- frFR
+		["Vipère"] = true,
+		["Serpent venimeux"] = true,
+		["Esprit du loup"] = true,
+		["Tréant"] = true,
+		["Ombrefiel"] = true,
+		["Elémentaire d’eau"] = true,
 		["Gargouille d'ébène"] = true,
    },
 	["ClassIcons"] = { -- Class icon file paths
