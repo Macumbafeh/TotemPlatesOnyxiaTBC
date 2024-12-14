@@ -1,5 +1,7 @@
 local AddOn = "TotemPlates"
 
+local EnablePartyIcons = true
+
 local numChildren = -1
 local Table = {
    ["Nameplates"] = {},
@@ -300,14 +302,44 @@ local Table = {
 		["Elémentaire d’eau"] = true,
 		["Elémentaire d’eau "] = true,
 		
+		["El\195\169mentaire d\039eau"] = true,
+		["El\195\169mentaire d\039eau "] = true,
+		["Elémentaire d\039eau"] = true,
+		["Elémentaire d\039eau "] = true,
+		
 		["Water Elemental"] = true,
 		["Ebon Gargoyle"] = true,
 		["Gargouille d'ébène"] = true,
    },
+	["ClassIcons"] = { -- Class icon file paths
+		["WARRIOR"] = "Interface\\AddOns\\TotemPlates\\Textures\\Class\\WARRIOR.tga",
+		["PALADIN"] = "Interface\\AddOns\\TotemPlates\\Textures\\Class\\PALADIN.tga",
+		["HUNTER"] = "Interface\\AddOns\\TotemPlates\\Textures\\Class\\HUNTER.tga",
+		["ROGUE"] = "Interface\\AddOns\\TotemPlates\\Textures\\Class\\ROGUE.tga",
+		["PRIEST"] = "Interface\\AddOns\\TotemPlates\\Textures\\Class\\PRIEST.tga",
+		["DEATHKNIGHT"] = "Interface\\AddOns\\TotemPlates\\Textures\\Class\\DEATHKNIGHT.tga",
+		["SHAMAN"] = "Interface\\AddOns\\TotemPlates\\Textures\\Class\\SHAMAN.tga",
+		["MAGE"] = "Interface\\AddOns\\TotemPlates\\Textures\\Class\\MAGE.tga",
+		["WARLOCK"] = "Interface\\AddOns\\TotemPlates\\Textures\\Class\\WARLOCK.tga",
+		["DRUID"] = "Interface\\AddOns\\TotemPlates\\Textures\\Class\\DRUID.tga",
+	},
+
    xOfs = 0,
    yOfs = 0,
-   Scale = 0.8,
+   Scale = 0.6,
 }
+
+local function GetClassIcon(name)
+   for i = 1, GetNumGroupMembers() do
+      local unit = "party" .. i
+      if UnitName(unit) == name then
+         local _, class = UnitClass(unit)
+         return Table["ClassIcons"][class]
+      end
+   end
+   return nil
+end
+
 
 local function UpdateObjects(hp)
    frame = hp:GetParent()
@@ -363,6 +395,31 @@ local function UpdateObjects(hp)
          break
       end
    end
+   
+   -- Party member handling
+   if EnablePartyIcons then
+	local classIcon = GetClassIcon(name)
+	if classIcon then
+		overlay:SetAlpha(0)
+		threat:Hide()
+		hpborder:Hide()
+		oldname:Hide()
+		level:Hide()
+		hp:SetAlpha(0)
+		if not frame.totem then
+			frame.totem = frame:CreateTexture(nil, "BACKGROUND")
+			frame.totem:ClearAllPoints()
+			frame.totem:SetPoint("CENTER", frame, "CENTER", Table.xOfs, Table.yOfs)
+		else
+			frame.totem:Show()
+		end
+		frame.totem:SetTexture(classIcon)
+		frame.totem:SetWidth(64 * Table.Scale)
+		frame.totem:SetHeight(64 * Table.Scale)
+	else
+		return
+	end
+   end
 end
 
 local function SkinObjects(frame)
@@ -405,3 +462,15 @@ Frame:SetScript("OnEvent", function(self, event, name)
 		end   
 	end
 end)
+
+SLASH_TOTEMPLATES1 = "/totemplates"
+SLASH_TOTEMPLATES2 = "/tm"
+SlashCmdList["TOTEMPLATES"] = function(msg)
+   if msg == "partyicons" then
+      EnablePartyIcons = not EnablePartyIcons
+      local status = EnablePartyIcons and "|cff00ff00enabled|r" or "|cffff0000disabled|r"
+      print("|cff00ccffTotemPlates|r: Party icons are now " .. status .. ".")
+   else
+      print("|cff00ccffTotemPlates|r: Usage: /totemplates partyicons - Toggle party member class icons.")
+   end
+end
