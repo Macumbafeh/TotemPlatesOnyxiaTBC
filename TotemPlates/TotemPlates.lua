@@ -149,6 +149,7 @@ local Table = {
 		["Totem de force de la terre VI"] = true,
 		["Totem de Gl\195\168be"] = true,
 		["Totem de gl\195\168be"] = true,
+		["Totem de glèbe"] = true,
 		["Totem de Gr\195\162ce a\195\169rienne"] = true,
 		["Totem de Gr\195\162ce a\195\169rienne II"] = true,
 		["Totem de Gr\195\162ce a\195\169rienne III"] = true,
@@ -334,6 +335,8 @@ end
 
 
 local function UpdateObjects(hp)
+if IsAddOnLoaded("Kui_Nameplates") then return end
+	
    frame = hp:GetParent()
    local threat, hpborder, cbshield, cbborder, cbicon, overlay, oldname, level, bossicon, raidicon, elite = frame:GetRegions()
    local name = oldname:GetText()
@@ -414,7 +417,107 @@ local function UpdateObjects(hp)
    end
 end
 
+local isKuiLoaded = IsAddOnLoaded("Kui_Nameplates")
+
+if isKuiLoaded and KuiNameplates then
+    local addon = KuiNameplates -- Reference to KuiNameplates addon
+
+    -- Function to update nameplates for Totem visuals
+    local function UpdateKuiTotemNameplates(f)
+        if not f.name then return end  -- Kui frame safety check
+		
+        local name = f.name.text  -- Fetch name text
+        if Table["Totems"][name] then
+            -- Hide KuiNameplates default visuals
+            if f.health then 
+				f.health:Hide()
+				if f.health.bg then f.health.bg:Hide() end
+			end
+            if f.name then f.name:Hide() end
+            if f.level then f.level:Hide() end
+			if f.text then f.text:Hide() end
+			if f.health.p then f.health.p:Hide() end
+			if f.highlight then f.highlight:Hide() end
+			if f.overlay then f.overlay:Hide() end
+			if f.bg then f.bg:Hide() end
+	
+            -- Add custom Totem icon
+            if not f.totemIcon then
+                f.totemIcon = f:CreateTexture(nil, "OVERLAY")
+                f.totemIcon:SetSize(64 * Table.Scale, 64 * Table.Scale)
+                f.totemIcon:SetPoint("CENTER", f, "CENTER", Table.xOfs, Table.yOfs)
+            end
+            f.totemIcon:SetTexture("Interface\\AddOns\\" .. AddOn .. "\\Textures\\" .. name)
+            f.totemIcon:Show()
+        elseif f.totemIcon then
+            -- Hide Totem Icon if no match
+            f.totemIcon:Hide()
+            if f.health then 
+                f.health:Show() 
+                if f.health.bg then f.health.bg:Show() end
+            end
+            if f.name then f.name:Show() end
+            if f.level then f.level:Show() end
+            if f.health.p then f.health.p:Show() end
+			if f.highlight then f.highlight:Show() end
+			if f.overlay then f.overlay:Show() end
+			if f.bg then f.bg:Hide() end
+		else
+			return
+        end
+    end
+	
+	local function UpdateKuiPartyIcons(f)
+        if not f.name then return end 
+
+        local name = f.name.text
+        local classIcon = GetClassIcon(name)
+
+        if classIcon then
+            -- Hide KuiNameplates default visuals
+            if f.health then f.health:Hide() end
+            if f.name then f.name:Hide() end
+            if f.level then f.level:Hide() end
+            if f.bg then f.bg:Hide() end -- Hide background
+			if f.text then f.text:Hide() end
+			if f.health.p then f.health.p:Hide() end
+			if f.highlight then f.highlight:Hide() end
+			if f.overlay then f.overlay:Hide() end
+
+            -- Add custom Class Icon
+            if not f.partyIcon then
+                f.partyIcon = f:CreateTexture(nil, "OVERLAY")
+                f.partyIcon:SetSize(64 * Table.Scale, 64 * Table.Scale)
+                f.partyIcon:SetPoint("CENTER", f, "CENTER", Table.xOfs, Table.yOfs)
+            end
+            f.partyIcon:SetTexture(classIcon)
+            f.partyIcon:Show()
+        elseif f.partyIcon then
+            -- Hide Party Class Icon if no match
+            f.partyIcon:Hide()
+        end
+    end
+	
+    -- Hook KuiNameplates PostShow event to update Totem visuals
+    addon.RegisterMessage("TotemPlates", "KuiNameplates_PostShow", function(_, frame)
+        UpdateKuiTotemNameplates(frame)
+		if EnablePartyIcons then
+			UpdateKuiPartyIcons(frame)
+		end
+    end)
+
+    -- Hook KuiNameplates PostHide to clean up icons
+    addon.RegisterMessage("TotemPlates", "KuiNameplates_PostHide", function(_, frame)
+        if frame.totemIcon then
+            frame.totemIcon:Hide()
+        end
+    end)
+end
+
+
 local function SkinObjects(frame)
+if IsAddOnLoaded("Kui_Nameplates") then return end
+
    local HealthBar, CastBar = frame:GetChildren()
    local threat, hpborder, cbshield, cbborder, cbicon, overlay, oldname, level, bossicon, raidicon, elite = frame:GetRegions()
 
@@ -454,6 +557,10 @@ Frame:SetScript("OnEvent", function(self, event, name)
 		end   
 	end
 end)
+
+
+
+
 
 SLASH_TOTEMPLATES1 = "/totemplates"
 SLASH_TOTEMPLATES2 = "/tm"
