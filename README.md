@@ -12,6 +12,8 @@ Modified also the icons to be HD and thin
 
 support english and french client only
 
+Added support for KuiNameplates
+
 ![image](https://github.com/user-attachments/assets/ac2ce55e-3640-404e-9941-542246cd6c3b)
 
 ![image](https://github.com/user-attachments/assets/02be3815-b635-45e5-9bfd-ce9704ed10dc)
