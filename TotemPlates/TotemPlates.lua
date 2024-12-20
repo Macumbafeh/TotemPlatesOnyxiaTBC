@@ -1,6 +1,11 @@
 local AddOn = "TotemPlates"
 
-local EnablePartyIcons = true
+if not TotemPlatesDB then
+    TotemPlatesDB = {
+        TotemPlatesDB = false, -- Default value
+    }
+end
+
 
 local numChildren = -1
 local Table = {
@@ -323,15 +328,41 @@ local Table = {
 }
 
 local function GetClassIcon(name)
-   for i = 1, GetNumGroupMembers() do
-      local unit = "party" .. i
-      if UnitName(unit) == name then
-         local _, class = UnitClass(unit)
-         return Table["ClassIcons"][class]
-      end
-   end
-   return nil
+    if not UnitInRaid("player") and not UnitInParty("player") then
+        -- Player is not in a group or raid
+        return nil
+    end
+	
+    -- Determine the player's raid group if in a raid
+    local playerGroup = nil
+    if UnitInRaid("player") then
+        for i = 1, GetNumGroupMembers() do
+            local unit = "raid" .. i
+            if UnitExists(unit) and UnitIsUnit(unit, "player") then
+                playerGroup = select(3, GetRaidRosterInfo(i)) -- Get the player's raid group
+                break
+            end
+        end
+    end
+
+    -- Iterate through group members and find the matching name
+    local numMembers = GetNumGroupMembers()
+    for i = 1, numMembers do
+        local unit = (UnitInRaid("player") and "raid" or "party") .. i
+        if UnitExists(unit) and UnitName(unit) == name and
+           (not UnitInRaid("player") or select(3, GetRaidRosterInfo(i)) == playerGroup) and -- Only check same party in raid
+           not UnitIsDead(unit) and not UnitIsGhost(unit) and
+           UnitIsConnected(unit) and UnitIsFriend("player", unit) then
+            
+            -- Get class and return the corresponding icon
+            local _, class = UnitClass(unit)
+            return Table["ClassIcons"][class]
+        end
+    end
+
+    return nil
 end
+
 
 
 local function UpdateObjects(hp)
@@ -427,74 +458,101 @@ if isKuiLoaded and KuiNameplates then
         if not f.name then return end  -- Kui frame safety check
 		
         local name = f.name.text  -- Fetch name text
-        if Table["Totems"][name] then
+		for totem in pairs(Table["Totems"]) do
+        if Table["Totems"][name] == true then
             -- Hide KuiNameplates default visuals
             if f.health then 
 				f.health:Hide()
-				if f.health.bg then f.health.bg:Hide() end
+				-- if f.health.bg then f.health.bg:Hide() end
 			end
-            if f.name then f.name:Hide() end
-            if f.level then f.level:Hide() end
+           -- if f.name then f.name:Hide() end
+           -- if f.level then f.level:Hide() end
 			if f.text then f.text:Hide() end
-			if f.health.p then f.health.p:Hide() end
-			if f.highlight then f.highlight:Hide() end
+			-- if f.health.p then f.health.p:Hide() end
+			-- if f.highlight then f.highlight:Hide() end
 			if f.overlay then f.overlay:Hide() end
 			if f.bg then f.bg:Hide() end
 	
             -- Add custom Totem icon
             if not f.totemIcon then
-                f.totemIcon = f:CreateTexture(nil, "OVERLAY")
-                f.totemIcon:SetSize(64 * Table.Scale, 64 * Table.Scale)
+                f.totemIcon = f:CreateTexture(nil, "BACKGROUND")
+				f.totemIcon:ClearAllPoints()
                 f.totemIcon:SetPoint("CENTER", f, "CENTER", Table.xOfs, Table.yOfs)
+			else
+				f.totemIcon:Show()
             end
-            f.totemIcon:SetTexture("Interface\\AddOns\\" .. AddOn .. "\\Textures\\" .. name)
-            f.totemIcon:Show()
+			f.totemIcon:SetTexture("Interface\\AddOns\\" .. AddOn .. "\\Textures\\" .. name)
+			f.totemIcon:SetSize(64 * Table.Scale, 64 * Table.Scale)
+            break
         elseif f.totemIcon then
             -- Hide Totem Icon if no match
-            f.totemIcon:Hide()
+            
             if f.health then 
                 f.health:Show() 
-                if f.health.bg then f.health.bg:Show() end
+               -- if f.health.bg then f.health.bg:Show() end
             end
-            if f.name then f.name:Show() end
-            if f.level then f.level:Show() end
-            if f.health.p then f.health.p:Show() end
-			if f.highlight then f.highlight:Show() end
+           -- if f.name then f.name:Show() end
+           -- if f.level then f.level:Show() end
+           -- if f.health.p then f.health.p:Show() end
+			-- if f.highlight then f.highlight:Show() end
 			if f.overlay then f.overlay:Show() end
-			if f.bg then f.bg:Hide() end
-		else
-			return
+			if f.bg then f.bg:Show() end
+			f.totemIcon:Hide()
+			break
         end
+		end
     end
 	
 	local function UpdateKuiPartyIcons(f)
+		if not EnablePartyIcons then return end
         if not f.name then return end 
-
+		
         local name = f.name.text
         local classIcon = GetClassIcon(name)
 
         if classIcon then
+			if not UnitIsConnected(name) and UnitIsFriend("player", name) and not UnitInParty(name) then return end
             -- Hide KuiNameplates default visuals
-            if f.health then f.health:Hide() end
-            if f.name then f.name:Hide() end
-            if f.level then f.level:Hide() end
-            if f.bg then f.bg:Hide() end -- Hide background
+			if f.health then 
+                f.health:Hide() 
+               -- if f.health.bg then f.health.bg:Hide() end
+            end
+            -- if f.name then f.name:Hide() end
+            -- if f.level then f.level:Hide() end
 			if f.text then f.text:Hide() end
-			if f.health.p then f.health.p:Hide() end
-			if f.highlight then f.highlight:Hide() end
+			-- if f.health.p then f.health.p:Hide() end
+			-- if f.highlight then f.highlight:Hide() end
 			if f.overlay then f.overlay:Hide() end
+			if f.bg then f.bg:Hide() end -- Hide background
 
             -- Add custom Class Icon
             if not f.partyIcon then
-                f.partyIcon = f:CreateTexture(nil, "OVERLAY")
-                f.partyIcon:SetSize(64 * Table.Scale, 64 * Table.Scale)
+                f.partyIcon = f:CreateTexture(nil, "BACKGROUND")
+                f.partyIcon:ClearAllPoints()
                 f.partyIcon:SetPoint("CENTER", f, "CENTER", Table.xOfs, Table.yOfs)
+			else
+				f.partyIcon:Show()
             end
             f.partyIcon:SetTexture(classIcon)
-            f.partyIcon:Show()
-        elseif f.partyIcon then
-            -- Hide Party Class Icon if no match
-            f.partyIcon:Hide()
+			f.partyIcon:SetSize(64 * Table.Scale, 64 * Table.Scale)
+			
+		elseif f.partyIcon then
+            -- Hide Totem Icon if no match
+            
+            if f.health then 
+                f.health:Show() 
+               -- if f.health.bg then f.health.bg:Show() end
+            end
+           -- if f.name then f.name:Show() end
+           -- if f.level then f.level:Show() end
+           -- if f.health.p then f.health.p:Show() end
+			-- if f.highlight then f.highlight:Show() end
+			if f.overlay then f.overlay:Show() end
+			if f.bg then f.bg:Show() end
+			f.partyIcon:Hide()
+			
+		else
+			return
         end
     end
 	
@@ -511,6 +569,9 @@ if isKuiLoaded and KuiNameplates then
         if frame.totemIcon then
             frame.totemIcon:Hide()
         end
+		if frame.partyIcon then
+			frame.partyIcon:Hide()
+		end
     end)
 end
 
@@ -554,7 +615,11 @@ Frame:SetScript("OnEvent", function(self, event, name)
 		if ( not _G[AddOn .. "_PlayerEnteredWorld"] ) then
 			ChatFrame1:AddMessage("|cff00ccff" .. AddOn .. "|cffffffff Loaded")
 			_G[AddOn .. "_PlayerEnteredWorld"] = true
-		end   
+		end 
+	 -- Load the saved setting
+        EnablePartyIcons = TotemPlatesDB.EnablePartyIcons
+        local status = EnablePartyIcons and "|cff00ff00enabled|r" or "|cffff0000disabled|r"
+        print("|cff00ccffTotemPlates|r: Party icons are " .. status .. ".")
 	end
 end)
 
@@ -566,10 +631,11 @@ SLASH_TOTEMPLATES1 = "/totemplates"
 SLASH_TOTEMPLATES2 = "/tm"
 SlashCmdList["TOTEMPLATES"] = function(msg)
    if msg == "partyicons" then
-      EnablePartyIcons = not EnablePartyIcons
-      local status = EnablePartyIcons and "|cff00ff00enabled|r" or "|cffff0000disabled|r"
-      print("|cff00ccffTotemPlates|r: Party icons are now " .. status .. ".")
-   else
-      print("|cff00ccffTotemPlates|r: Usage: /totemplates partyicons - Toggle party member class icons.")
-   end
+      TotemPlatesDB.EnablePartyIcons = not TotemPlatesDB.EnablePartyIcons
+       EnablePartyIcons = TotemPlatesDB.EnablePartyIcons
+       local status = EnablePartyIcons and "|cff00ff00enabled|r" or "|cffff0000disabled|r"
+       print("|cff00ccffTotemPlates|r: Party icons are now " .. status .. ".")
+    else
+       print("|cff00ccffTotemPlates|r: Usage: /totemplates partyicons - Toggle party member class icons.")
+    end
 end

@@ -3,5 +3,6 @@
 ## Author: raisnilt, modified by Macumba
 ## Notes: replace totems, minions by their icons and party members to their class icons.
 ## Version: 1.4
+## SavedVariables: TotemPlatesDB
 
 TotemPlates.lua
