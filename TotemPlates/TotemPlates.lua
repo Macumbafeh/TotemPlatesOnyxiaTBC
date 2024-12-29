@@ -627,15 +627,32 @@ end)
 
 
 
+-- Define a StaticPopup for reload confirmation
+StaticPopupDialogs["TOTEMPLATES_RELOAD_UI"] = {
+    text = "TotemPlates: Do you want to reload the UI to apply changes? Recommended if you disabled Party Icons.",
+    button1 = "Yes",
+    button2 = "No",
+    OnAccept = function()
+        ReloadUI()
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3, -- Prevent conflicts with other dialogs
+}
+
+-- Slash Command
 SLASH_TOTEMPLATES1 = "/totemplates"
 SLASH_TOTEMPLATES2 = "/tm"
 SlashCmdList["TOTEMPLATES"] = function(msg)
-   if msg == "partyicons" then
-      TotemPlatesDB.EnablePartyIcons = not TotemPlatesDB.EnablePartyIcons
-       EnablePartyIcons = TotemPlatesDB.EnablePartyIcons
-       local status = EnablePartyIcons and "|cff00ff00enabled|r" or "|cffff0000disabled|r"
-       print("|cff00ccffTotemPlates|r: Party icons are now " .. status .. ".")
+    if msg == "partyicons" then
+        TotemPlatesDB.EnablePartyIcons = not TotemPlatesDB.EnablePartyIcons
+        EnablePartyIcons = TotemPlatesDB.EnablePartyIcons
+        local status = EnablePartyIcons and "|cff00ff00enabled|r" or "|cffff0000disabled|r"
+        print("|cff00ccffTotemPlates|r: Party icons are now " .. status .. ".")
+        -- Show reload confirmation dialog
+        StaticPopup_Show("TOTEMPLATES_RELOAD_UI")
     else
-       print("|cff00ccffTotemPlates|r: Usage: /totemplates partyicons - Toggle party member class icons.")
+        print("|cff00ccffTotemPlates|r: Usage: /totemplates partyicons - Toggle party member class icons.")
     end
 end
