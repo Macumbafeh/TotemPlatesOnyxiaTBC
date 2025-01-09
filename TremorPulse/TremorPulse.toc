@@ -1,0 +1,7 @@
+## Interface: 30300
+## Author: Macumba
+## Title: TremorPulse
+## Notes: add a tick pulse timer on all Tremor totems. using awesome_wotlk patch API
+## RequiredDeps: TotemPlates
+
+TremorPulse.lua
