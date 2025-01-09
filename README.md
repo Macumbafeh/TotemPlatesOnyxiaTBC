@@ -35,6 +35,10 @@ You can enable/disable this feature with a slash command :
 
 ![image](https://github.com/user-attachments/assets/f90a01c2-2490-4d14-9cc7-66181a2bd1de)
 
+## TremorPulse module
+New module added which add a timer on all tremor totems for pulse ticks.
+
+![image](https://github.com/user-attachments/assets/df2c29f2-84d4-4cc1-bcff-78ce8f1baa5f)
 
 # Source :
 Fork of this version : https://github.com/wotlk-addons/TotemPlates
