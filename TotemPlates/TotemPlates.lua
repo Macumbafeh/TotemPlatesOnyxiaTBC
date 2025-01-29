@@ -367,8 +367,9 @@ end
 
 local function UpdateObjects(hp)
 if IsAddOnLoaded("Kui_Nameplates") then return end
-	
+
    frame = hp:GetParent()
+   frame.TotemPlatesManaged = true
    local threat, hpborder, cbshield, cbborder, cbicon, overlay, oldname, level, bossicon, raidicon, elite = frame:GetRegions()
    local name = oldname:GetText()
 
