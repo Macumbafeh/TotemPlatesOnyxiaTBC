@@ -350,7 +350,7 @@ local function GetClassIcon(name)
     for i = 1, numMembers do
         local unit = (UnitInRaid("player") and "raid" or "party") .. i
         if UnitExists(unit) and UnitName(unit) == name and
-           (not UnitInRaid("player") or select(3, GetRaidRosterInfo(i)) == playerGroup) and -- Only check same party in raid
+           --[[(not UnitInRaid("player") or select(3, GetRaidRosterInfo(i)) == playerGroup) and -- Only check same party in raid]]
            not UnitIsDead(unit) and not UnitIsGhost(unit) and
            UnitIsConnected(unit) and UnitIsFriend("player", unit) then
             
